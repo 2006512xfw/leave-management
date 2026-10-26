@@ -125,6 +125,104 @@ html, body {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  position: relative;
+}
+
+/* 卡片内标题 */
+.info-card .section-title {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+/* 用户头部 */
+.user-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  margin: 16px 12px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  margin-right: 14px;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #e8e8e8;
+}
+
+.avatar-edit-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #2b8bf2;
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 6px;
+}
+
+.user-name.editable {
+  color: #2b8bf2;
+  cursor: pointer;
+}
+
+.gender-icon {
+  color: #2b8bf2;
+  font-size: 16px;
+}
+
+.user-meta {
+  font-size: 13px;
+  color: #999;
+}
+
+/* 编辑模式：按钮默认透明，触摸屏幕时短暂显示 */
+.edit-mode-btn {
+  transition: opacity 0.3s;
+}
+
+body:not(.preview-mode) .edit-mode-btn {
+  opacity: 0;
+}
+
+body:not(.preview-mode) .edit-mode-btn.show {
+  opacity: 1;
 }
 
 .info-row {
@@ -208,13 +306,23 @@ body:not(.preview-mode) .edit-mode-btn.show {
 }
 
 body.preview-mode .info-value.editable,
-body.preview-mode .edit-badge {
+body.preview-mode .user-name.editable {
   color: #333;
   cursor: default;
 }
 
-body.preview-mode .edit-badge {
+body.preview-mode .edit-badge,
+body.preview-mode .avatar-edit-badge,
+body.preview-mode .attachment-edit-badge,
+body.preview-mode .attachment-change-btn,
+body.preview-mode .edit-hint,
+body.preview-mode .edit-mode-btn {
   display: none !important;
+}
+
+body.preview-mode .attachment-thumb,
+body.preview-mode .avatar {
+  cursor: default;
 }
 
 .attachment-section {
@@ -462,45 +570,6 @@ body.preview-mode .edit-badge {
   margin: 24px 12px 12px;
 }
 
-/* 编辑模式开关按钮 */
-.edit-toggle {
-  position: fixed;
-  right: 16px;
-  bottom: 80px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background-color: #2b8bf2;
-  color: #fff;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(43,139,242,0.4);
-  cursor: pointer;
-  border: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-/* 预览模式下：隐藏所有编辑 UI（含切换按钮本身） */
-body.preview-mode .edit-hint,
-body.preview-mode .attachment-change-btn,
-body.preview-mode .attachment-edit-badge,
-body.preview-mode .edit-toggle {
-  display: none !important;
-}
-
-body.preview-mode .timeline-date.editable {
-  color: #999;
-  cursor: default;
-}
-
-body.preview-mode .attachment-thumb {
-  cursor: default;
-}
-
 /* 编辑模式提示条（3秒后自动消失） */
 .mode-toast {
   position: fixed;
@@ -696,11 +765,46 @@ body.preview-mode .attachment-thumb {
     <span class="crumb-item active">请假管理</span>
   </div>
 
-  <!-- 信息卡片 -->
+  <!-- 用户头部信息 -->
+  <div class="user-header">
+    <div class="avatar-wrap">
+      <img class="avatar" id="avatarImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><circle cx='50' cy='50' r='50' fill='%23e8e8e8'/><circle cx='50' cy='40' r='18' fill='%23bbbbbb'/><ellipse cx='50' cy='90' rx='30' ry='22' fill='%23bbbbbb'/></svg>" alt="头像">
+      <span class="avatar-edit-badge">✎</span>
+    </div>
+    <div class="user-info">
+      <div class="user-name-line">
+        <span class="user-name editable" id="studentName" data-edit="1">许法文</span>
+        <span class="gender-icon">♂</span>
+      </div>
+      <div class="user-meta">财会金融学院 | 2025级金融服务与管理1班</div>
+    </div>
+  </div>
+
+  <!-- 请假信息 -->
   <div class="info-card">
+    <div class="section-title">
+      <div class="title-bar"></div>
+      <span>请假信息</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">请假类型：</span>
+      <span class="info-value editable" id="leaveType" data-edit="1">病假</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">请假去向：</span>
+      <span class="info-value editable" id="leaveDestination" data-edit="1">不离校</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">详细地址：</span>
+      <span class="info-value editable" id="leaveAddress" data-edit="1"></span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">开始时间：</span>
+      <span class="info-value editable" id="startTime" data-edit="1">2026-05-08 08:26:00</span>
+    </div>
     <div class="info-row">
       <span class="info-label">结束时间：</span>
-      <span class="info-value editable" id="endTime" data-edit="1">2025-12-05 13:42:00</span>
+      <span class="info-value editable" id="endTime" data-edit="1">2026-05-08 12:26:00</span>
     </div>
     <div class="info-row">
       <span class="info-label">统计时长：</span>
@@ -716,15 +820,11 @@ body.preview-mode .attachment-thumb {
     </div>
     <div class="info-row">
       <span class="info-label">请假理由：</span>
-      <span class="info-value editable" id="reason" data-edit="1">发烧39.3出去打针</span>
+      <span class="info-value editable" id="reason" data-edit="1">呼吸道感染</span>
     </div>
     <div class="info-row">
       <span class="info-label">请假状态：</span>
       <span class="info-value status-blue">审核通过</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">销假状态：</span>
-      <span class="info-value">已销假</span>
     </div>
 
     <div class="attachment-section">
@@ -757,6 +857,22 @@ body.preview-mode .attachment-thumb {
     <div class="timeline" id="timeline"></div>
   </div>
 
+  <!-- 销假信息 -->
+  <div class="info-card">
+    <div class="section-title">
+      <div class="title-bar"></div>
+      <span>销假信息</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">销假状态：</span>
+      <span class="info-value editable" id="cancelStatus" data-edit="1">已销假</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">销假时间：</span>
+      <span class="info-value editable" id="cancelTime" data-edit="1">2026-05-25 09:13:15</span>
+    </div>
+  </div>
+
   <!-- 底部按钮 -->
   <div class="bottom-btn">
     <button class="action-btn" disabled>已销假</button>
@@ -768,9 +884,6 @@ body.preview-mode .attachment-thumb {
     <div class="nav-arrow">＞</div>
   </div>
 </div>
-
-<!-- 编辑/预览切换按钮（双击屏幕切换，编辑模式下按钮 3 秒后自动隐藏） -->
-<button class="edit-toggle" id="editToggle" title="切换模式">✎</button>
 
 <!-- 模式切换提示 -->
 <div class="mode-toast" id="modeToast">预览模式</div>
@@ -973,23 +1086,26 @@ document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalMask').addEventListener('click', closeModal);
 
 // === 信息卡片编辑功能 ===
-// 结束时间用 datetime-local（日期+时间一体），其余用文本输入
+// 自动给所有带 data-edit 的元素绑定编辑，包含名字、请假类型、去向、地址、开始/结束时间、统计时长、联系人、电话、理由、销假状态/时间
 var editingField = null;
 var textModalMask = document.getElementById('textModalMask');
 var textModalContent = document.getElementById('textModalContent');
 var textInput = document.getElementById('textInput');
 var textConfirmBtn = document.getElementById('textConfirmBtn');
 
-function openTextModal(fieldId, label, value) {
+function openTextModal(fieldId, label, value, inputType) {
   editingField = fieldId;
   document.getElementById('textModalTitle').textContent = '修改' + label;
   document.getElementById('textFieldLabel').textContent = label;
+  textInput.type = inputType || 'text';
   textInput.value = value;
   textModalMask.classList.add('show');
   setTimeout(function() {
     textModalContent.classList.add('show');
     textInput.focus();
-    textInput.select();
+    if (inputType !== 'datetime-local') {
+      textInput.select();
+    }
   }, 10);
 }
 
@@ -1001,7 +1117,7 @@ function closeTextModal() {
   }, 250);
 }
 
-// 结束时间：把 "2025-12-05 13:42:00" 转成 datetime-local 格式 "2025-12-05T13:42"
+// 时间字符串与 datetime-local 互转
 function toDatetimeLocal(str) {
   if (!str) return '';
   var parts = str.split(' ');
@@ -1015,58 +1131,40 @@ function fromDatetimeLocal(str) {
   return d + ':00';
 }
 
-// 结束时间点击 → 复用日期时间弹窗（更直观，用原生 datetime）
-var endTimeEl = document.getElementById('endTime');
-// 用一个单独的 datetime 弹窗处理结束时间
-function openEndDatetimeModal() {
-  editingField = 'endTime';
-  var cur = endTimeEl.textContent.trim();
-  document.getElementById('textModalTitle').textContent = '修改结束时间';
-  document.getElementById('textFieldLabel').textContent = '结束时间';
-  // 把 input 改成 datetime-local 类型
-  textInput.type = 'datetime-local';
-  textInput.value = toDatetimeLocal(cur);
-  textModalMask.classList.add('show');
-  setTimeout(function() {
-    textModalContent.classList.add('show');
-    textInput.focus();
-  }, 10);
+// 判断一个字段是否是时间类字段
+function isDatetimeField(label) {
+  return label.indexOf('时间') >= 0;
 }
 
-function openTextFieldModal(fieldId) {
-  editingField = fieldId;
-  var el = document.getElementById(fieldId);
-  var label = el.previousElementSibling ? el.previousElementSibling.textContent.replace('：','') : '内容';
-  document.getElementById('textModalTitle').textContent = '修改' + label;
-  document.getElementById('textFieldLabel').textContent = label;
-  textInput.type = 'text';
-  textInput.value = el.textContent.trim();
-  textModalMask.classList.add('show');
-  setTimeout(function() {
-    textModalContent.classList.add('show');
-    textInput.focus();
-    textInput.select();
-  }, 10);
+// 自动绑定所有 data-edit 元素
+function bindEditableFields() {
+  var fields = document.querySelectorAll('[data-edit="1"]');
+  fields.forEach(function(el) {
+    el.addEventListener('click', function() {
+      var id = this.id;
+      var label = this.previousElementSibling ? this.previousElementSibling.textContent.replace(/[：:]/g, '') : '内容';
+      var value = this.textContent.trim();
+      if (isDatetimeField(label)) {
+        openTextModal(id, label, toDatetimeLocal(value), 'datetime-local');
+      } else {
+        openTextModal(id, label, value, 'text');
+      }
+    });
+  });
 }
-
-endTimeEl.addEventListener('click', openEndDatetimeModal);
-document.getElementById('duration').addEventListener('click', function() { openTextFieldModal('duration'); });
-document.getElementById('contactName').addEventListener('click', function() { openTextFieldModal('contactName'); });
-document.getElementById('contactPhone').addEventListener('click', function() { openTextFieldModal('contactPhone'); });
-document.getElementById('reason').addEventListener('click', function() { openTextFieldModal('reason'); });
 
 textConfirmBtn.addEventListener('click', function() {
   if (!editingField) return;
   var newVal = textInput.value.trim();
   if (newVal) {
     var el = document.getElementById(editingField);
-    if (editingField === 'endTime') {
+    var label = el.previousElementSibling ? el.previousElementSibling.textContent.replace(/[：:]/g, '') : '';
+    if (isDatetimeField(label)) {
       el.textContent = fromDatetimeLocal(newVal);
     } else {
       el.textContent = newVal;
     }
   }
-  // 重置 input 类型
   textInput.type = 'text';
   closeTextModal();
 });
@@ -1078,6 +1176,35 @@ document.getElementById('textModalClose').addEventListener('click', function() {
 textModalMask.addEventListener('click', function() {
   textInput.type = 'text';
   closeTextModal();
+});
+
+// === 头像更换功能 ===
+var avatarImg = document.getElementById('avatarImg');
+var avatarInput = document.createElement('input');
+avatarInput.type = 'file';
+avatarInput.accept = 'image/*';
+avatarInput.style.display = 'none';
+document.body.appendChild(avatarInput);
+
+function triggerAvatarPicker() {
+  avatarInput.value = '';
+  avatarInput.click();
+}
+
+avatarImg.addEventListener('click', triggerAvatarPicker);
+document.querySelector('.avatar-edit-badge').addEventListener('click', function(e) {
+  e.stopPropagation();
+  triggerAvatarPicker();
+});
+
+avatarInput.addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    avatarImg.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
 });
 
 // === 照片更换功能 ===
@@ -1178,6 +1305,7 @@ editModeBtn.addEventListener('click', function(e) {
 
 // 初始渲染
 renderTimeline();
+bindEditableFields();
 </script>
 </body>
 </html>
