@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="请假管理">
+<meta name="theme-color" content="#2b8bf2">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAFVUlEQVR4nO3dPXbbRhSAUVAnRRp7Fems2qX2kg24sgqvwIVVZQPeS8rUVudVWI07p8ihQlHEHzEA5s27t0viY/CQ78MMIBE5dJV49+XHr71fA9t6vH972Ps17PYCDDzn9ghi0wMaeqbaKobVD2LoWWrNGFb7iw0+pa0RQvG/0OCztpIh3JT6i7rO8LONknNWpCSDz16WrgaLVwDDz56Wzt+iAAw/NVgyh1ctHwafWs3dEs1eAQw/NZs7n7MCMPxEMGdOJwdg+Ilk6rwW/TkARDMpAGd/Ipoyt6MBGH4iG5vfwQAMPy0YmmPXAKTWG4CzPy3pm+eLARh+WnRprm2BSO1VAM7+tOx8vq0ApPYiAGd/MjidcysAqQmA1J4DsP0hk+O8WwFITQCkdug62x/ysgKQmgBITQCkdmP/T2ZWAFITAKkJgNQEQGoCILXf9n4BY759fLP3S2Ch24envV9CLysAqQmA1ARAagIgNQGQmgBITQCkJgBSEwCpCYDUBEBqAiA1AZCaAEhNAKQmAFITAKkJgNQEQGoCILXqvxR//oVqX5KvX81fgj8XagUw/DFE+pzCBBDpTSXO5xUigChvJi9F+NxCBABrqT6ACGcR+tX++VUfAKxJAKQmAFJrJoDbh6dPjtvucdfSTABwDQGQmgBITQCkJgBSEwCpCYDUBEBqAiC1w7svP37t/SKGTP1twtZ+QhnBt49vPk/5czV/RbL67wTPMfUDKen24emT48ZlC0RqAiA1AZCaAEhNAKQmAFITAKkJgNQEQGoCIDUBkJoASE0ApCYAUhMAqQmA1ARAagIgNQGQmgBITQCkJgBS81ygxn1//+HzH//8tcp747lAlcn0nJwpx/397z+7rvsvgp93Xzc7biS2QI06Dv/pP5//OwTQpKFBF8FLAkim1FaoFQJozNAZ3vC/JoCGGP75BNAIe/vrCKABY8Pv7N9PAMEZ/mUE0DDDP04AgbnoXU4AQX1//6H31xEM/3QCCMiZvxwBBON2Z1kCCMQdn/IEEIThX4cAGmD4ryeAAFz0rkcAlTP86xJAxdzxWZ8AKjU2/Gt90T0bAVTIHZ/tCKAyhn9bngs0Ys3n6vQdr++/1bbt8VygypR+Xs2U5+qUfE7O6B2fu+75ODU/jygSW6CJ1r4j43bnPgTQ49JArvVwKbc79yOAC8YGsuTAuujdlwAumDJ0JSIw/PsTQI+tIlhyfJYTwICfd19HB3HotuUQF711EMAEYwM59+LY8NdDABOV2hIZ/roIYIalEbjdWR8BzHRtBO741EkAV5hycXw68Ia/XgJYoMTFseHflwAWWvIbmoZ/fwIo4JpBNvx1EEAhBjomARQ05eL4+OeoQzPfCKtN38VvxuGv+Rth1a8ANb95Q46DfroqGP76VB9AZKcDn3H4IwgRQO1nES6L8LmFCKDrYryZ/C/K5xUmgK6L86ZmF+lzCvdYlOObG/XuUMsiDf5RuACOIr7Z1CfUFghKEwCpCYDUBEBqAiC1m8f7t4e9XwTsxQpAagIgNQGQ2k3XdZ3rADJ6vH97sAKQmgBI7TkA2yAyOc67FYDUBEBqLwKwDSKD0zm3ApDaqwCsArTsfL6tAKR2MQCrAC26NNe9K4AIaEnfPNsCkdpgAFYBWjA0x6MrgAiIbGx+J22BREBEU+bWNQCpTQ7AKkAkU+d11gogAiKYM6ezt0AioGZz53PRMNf+P9gjj2tPzIsugq0G1GDJHC6+CyQC9rR0/ooOry0RWyl14i36cwCrAVsoOWerDazVgNLWOMGufsYWAkutubPYdMsiBqbaaju9255dDJzb4xryX8iT5PdP9VJ/AAAAAElFTkSuQmCC">
+<title>请假管理</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  -webkit-text-size-adjust: 100%;
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 160px;
+}
+
+/* 顶部导航 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.top-left, .top-right {
+  width: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.top-right {
+  justify-content: flex-end;
+}
+
+.icon-close {
+  font-size: 30px;
+  color: #333;
+  line-height: 1;
+}
+
+.icon-more {
+  font-size: 20px;
+  color: #333;
+  letter-spacing: 1px;
+}
+
+.top-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: #333;
+}
+
+.sub-title {
+  font-size: 10px;
+  color: #999;
+  margin-top: 1px;
+}
+
+/* 面包屑 */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f5f7fa;
+  font-size: 13px;
+  color: #666;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.crumb-item {
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.crumb-item.home, .crumb-item.link {
+  color: #2b8bf2;
+}
+
+.crumb-item.active {
+  color: #333;
+}
+
+.crumb-sep {
+  margin: 0 4px;
+  color: #999;
+}
+
+/* 信息卡片 */
+.info-card {
+  margin: 16px 12px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  color: #999;
+  flex-shrink: 0;
+}
+
+.info-value {
+  color: #333;
+  flex: 1;
+  word-break: break-all;
+}
+
+.status-blue {
+  color: #2b8bf2;
+}
+
+.attachment-section {
+  margin-top: 6px;
+}
+
+.attachment-content {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #fafafa;
+  border-radius: 6px;
+}
+
+.attachment-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  background-color: #eee;
+  flex-shrink: 0;
+  display: block;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.attachment-thumb-wrap {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.attachment-edit-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #2b8bf2;
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  line-height: 1;
+}
+
+.attachment-change-btn {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 5px 14px;
+  font-size: 13px;
+  color: #2b8bf2;
+  background-color: #eaf4fe;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.attachment-input-hidden {
+  display: none;
+}
+
+.attachment-info {
+  flex: 1;
+  margin-left: 12px;
+  margin-right: 12px;
+  overflow: hidden;
+}
+
+.attachment-name {
+  font-size: 14px;
+  color: #333;
+  word-break: break-all;
+}
+
+.attachment-download {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* 办理进度 */
+.progress-card {
+  margin: 16px 12px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 18px;
+}
+
+.title-bar {
+  width: 4px;
+  height: 16px;
+  background-color: #2b8bf2;
+  border-radius: 2px;
+  margin-right: 8px;
+}
+
+/* 时间线 */
+.timeline {
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 28px;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.timeline-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #d9d9d9;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.timeline-dot.completed {
+  border-color: #2b8bf2;
+  background-color: #2b8bf2;
+}
+
+.timeline-dot.active {
+  border-color: #2b8bf2;
+  background-color: #fff;
+}
+
+.dot-check {
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.timeline-line {
+  width: 2px;
+  flex: 1;
+  background-color: #e8e8e8;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  min-height: 30px;
+}
+
+.timeline-right {
+  flex: 1;
+  padding-top: 1px;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 12px;
+}
+
+.timeline-title-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.timeline-title {
+  font-size: 15px;
+  color: #333;
+  margin-right: 8px;
+}
+
+.timeline-status {
+  font-size: 14px;
+}
+
+.timeline-status.green {
+  color: #07c160;
+}
+
+.timeline-date {
+  font-size: 13px;
+  color: #999;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.timeline-date.editable {
+  color: #2b8bf2;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.edit-hint {
+  font-size: 11px;
+  color: #2b8bf2;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid #2b8bf2;
+  border-radius: 4px;
+}
+
+.timeline-user {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 6px;
+}
+
+.timeline-remark {
+  font-size: 13px;
+  color: #2b8bf2;
+  text-align: right;
+}
+
+/* 底部按钮 */
+.bottom-btn {
+  margin: 24px 12px 12px;
+}
+
+/* 编辑模式开关按钮 */
+.edit-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 80px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #2b8bf2;
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(43,139,242,0.4);
+  cursor: pointer;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* 预览模式下：隐藏所有编辑 UI（含切换按钮本身） */
+body.preview-mode .edit-hint,
+body.preview-mode .attachment-change-btn,
+body.preview-mode .attachment-edit-badge,
+body.preview-mode .edit-toggle {
+  display: none !important;
+}
+
+body.preview-mode .timeline-date.editable {
+  color: #999;
+  cursor: default;
+}
+
+body.preview-mode .attachment-thumb {
+  cursor: default;
+}
+
+/* 编辑模式提示条（3秒后自动消失） */
+.mode-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.mode-toast.show {
+  opacity: 1;
+}
+
+.action-btn {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  background-color: #6ab8f7;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  text-align: center;
+  display: block;
+}
+
+.action-btn[disabled] {
+  background-color: #6ab8f7;
+  color: #fff;
+  opacity: 0.9;
+}
+
+/* 底部导航 */
+.bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0 24px;
+}
+
+.nav-arrow {
+  font-size: 18px;
+  color: #666;
+  margin: 0 24px;
+  padding: 8px;
+}
+
+/* 弹窗 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: none;
+}
+
+.modal-mask.show {
+  display: block;
+}
+
+.modal-content {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 16px;
+  z-index: 999;
+  max-width: 480px;
+  margin: 0 auto;
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+}
+
+.modal-content.show {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 26px;
+  color: #999;
+  line-height: 1;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 8px 0;
+}
+
+.picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.picker-row:last-child {
+  border-bottom: none;
+}
+
+.picker-label {
+  font-size: 15px;
+  color: #333;
+}
+
+.picker-value {
+  font-size: 15px;
+  color: #2b8bf2;
+  padding: 6px 12px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* 原生 input 隐藏，触发原生选择器 */
+.picker-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.modal-footer {
+  margin-top: 16px;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.btn-confirm {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  background-color: #2b8bf2;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- 顶部导航 -->
+  <div class="top-bar">
+    <div class="top-left">
+      <span class="icon-close">×</span>
+    </div>
+    <div class="top-title">
+      <span class="main-title">请假管理</span>
+      <span class="sub-title">xsgl.gxjmxy.edu.cn</span>
+    </div>
+    <div class="top-right">
+      <span class="icon-more">•••</span>
+    </div>
+  </div>
+
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <span class="crumb-item home">首页</span>
+    <span class="crumb-sep">&gt;</span>
+    <span class="crumb-item link">请假管理</span>
+    <span class="crumb-sep">&gt;</span>
+    <span class="crumb-item active">请假管理</span>
+  </div>
+
+  <!-- 信息卡片 -->
+  <div class="info-card">
+    <div class="info-row">
+      <span class="info-label">结束时间：</span>
+      <span class="info-value">2025-12-05 13:42:00</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">统计时长：</span>
+      <span class="info-value">1天0小时0分钟</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">紧急联系人：</span>
+      <span class="info-value">许宗彬</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">紧急联系人电话：</span>
+      <span class="info-value">18376922627</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">请假理由：</span>
+      <span class="info-value">发烧39.3出去打针</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">请假状态：</span>
+      <span class="info-value status-blue">审核通过</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">销假状态：</span>
+      <span class="info-value">已销假</span>
+    </div>
+
+    <div class="attachment-section">
+      <span class="info-label">请假附件：</span>
+      <div class="attachment-content">
+        <div class="attachment-thumb-wrap">
+          <img class="attachment-thumb" id="attachmentThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='%23ffffff' stroke='%23dddddd'/><text x='20' y='40' font-size='10' fill='%23333'>Medical Certificate</text><text x='15' y='60' font-size='8' fill='%23555'>Patient: Xu Fawen</text><text x='15' y='75' font-size='8' fill='%23555'>Diagnosis: Respiratory</text><text x='15' y='90' font-size='8' fill='%23555'>infection</text><text x='15' y='105' font-size='7' fill='%23999'>Date: 2026-05-08</text></svg>" alt="附件">
+          <span class="attachment-edit-badge">✎</span>
+        </div>
+        <div class="attachment-info">
+          <span class="attachment-name" id="attachmentName">2BD09118-FE7E-4E53-96FD-259CA3D70E96.png</span>
+          <div class="attachment-change-btn" id="changePhotoBtn">更换照片</div>
+        </div>
+        <svg class="attachment-download" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 18a5 5 0 010-10 6 6 0 0111.66-2A4 4 0 0118 18H7z" fill="#2b8bf2"/>
+          <path d="M12 8v7m0 0l-3-3m3 3l3-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <input type="file" class="attachment-input-hidden" id="photoInput" accept="image/*">
+    </div>
+  </div>
+
+  <!-- 办理进度 -->
+  <div class="progress-card">
+    <div class="section-title">
+      <div class="title-bar"></div>
+      <span>办理进度</span>
+    </div>
+
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <!-- 底部按钮 -->
+  <div class="bottom-btn">
+    <button class="action-btn" disabled>已销假</button>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="bottom-nav">
+    <div class="nav-arrow">＜</div>
+    <div class="nav-arrow">＞</div>
+  </div>
+</div>
+
+<!-- 编辑/预览切换按钮（双击屏幕切换，编辑模式下按钮 3 秒后自动隐藏） -->
+<button class="edit-toggle" id="editToggle" title="切换模式">✎</button>
+
+<!-- 模式切换提示 -->
+<div class="mode-toast" id="modeToast">预览模式</div>
+
+<!-- 弹窗 -->
+<div class="modal-mask" id="modalMask"></div>
+<div class="modal-content" id="modalContent">
+  <div class="modal-header">
+    <span class="modal-title">修改办理时间</span>
+    <span class="modal-close" id="modalClose">×</span>
+  </div>
+  <div class="modal-body">
+    <div class="picker-row">
+      <span class="picker-label">日期</span>
+      <span class="picker-value" id="dateDisplay">2026-05-08</span>
+      <input type="date" class="picker-input" id="dateInput">
+    </div>
+    <div class="picker-row">
+      <span class="picker-label">时间</span>
+      <span class="picker-value" id="timeDisplay">08:28</span>
+      <input type="time" class="picker-input" id="timeInput">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-confirm" id="confirmBtn">确定</button>
+  </div>
+</div>
+
+<script>
+var progressList = [
+  {
+    title: '申请',
+    status: '申请',
+    statusColor: 'green',
+    date: '2026-05-08 08:28',
+    user: '许法文',
+    completed: true,
+    active: false,
+    editable: true
+  },
+  {
+    title: '辅导员审核',
+    status: '审核通过',
+    statusColor: 'green',
+    date: '2026-05-08 08:44',
+    user: '蒙雪冬',
+    remark: '同意请假',
+    completed: true,
+    active: false,
+    editable: true
+  },
+  {
+    title: '结束',
+    status: '',
+    statusColor: '',
+    date: '',
+    user: '',
+    remark: '',
+    completed: false,
+    active: true,
+    editable: false
+  }
+];
+
+var editingIndex = -1;
+
+function renderTimeline() {
+  var html = '';
+  progressList.forEach(function(item, index) {
+    var dotClass = 'timeline-dot';
+    if (item.completed) dotClass += ' completed';
+    if (item.active) dotClass += ' active';
+
+    var dateHtml = '';
+    if (item.date) {
+      if (item.editable) {
+        dateHtml = '<div class="timeline-date editable" data-index="' + index + '">' +
+          '<span>' + item.date + '</span>' +
+          '<span class="edit-hint">修改</span>' +
+        '</div>';
+      } else {
+        dateHtml = '<div class="timeline-date">' + item.date + '</div>';
+      }
+    }
+
+    var statusHtml = item.status
+      ? '<span class="timeline-status ' + item.statusColor + '">' + item.status + '</span>'
+      : '';
+
+    var userHtml = item.user ? '<div class="timeline-user">' + item.user + '</div>' : '';
+    var remarkHtml = item.remark ? '<div class="timeline-remark">' + item.remark + '</div>' : '';
+
+    var lineHtml = (index !== progressList.length - 1) ? '<div class="timeline-line"></div>' : '';
+
+    var checkHtml = item.completed ? '<span class="dot-check">✓</span>' : '';
+
+    html += '<div class="timeline-item">' +
+      '<div class="timeline-left">' +
+        '<div class="' + dotClass + '">' + checkHtml + '</div>' +
+        lineHtml +
+      '</div>' +
+      '<div class="timeline-right">' +
+        '<div class="timeline-header">' +
+          '<div class="timeline-title-wrap">' +
+            '<span class="timeline-title">' + item.title + '</span>' +
+            statusHtml +
+          '</div>' +
+          dateHtml +
+        '</div>' +
+        userHtml +
+        remarkHtml +
+      '</div>' +
+    '</div>';
+  });
+  document.getElementById('timeline').innerHTML = html;
+
+  // 绑定可编辑日期点击事件
+  var editableDates = document.querySelectorAll('.timeline-date.editable');
+  editableDates.forEach(function(el) {
+    el.addEventListener('click', function() {
+      var idx = parseInt(this.getAttribute('data-index'));
+      openModal(idx);
+    });
+  });
+}
+
+function openModal(index) {
+  editingIndex = index;
+  var item = progressList[index];
+  var parts = item.date.split(' ');
+  var date = parts[0];
+  var time = parts[1];
+
+  document.getElementById('dateDisplay').textContent = date;
+  document.getElementById('timeDisplay').textContent = time;
+  document.getElementById('dateInput').value = date;
+  document.getElementById('timeInput').value = time;
+
+  document.getElementById('modalMask').classList.add('show');
+  setTimeout(function() {
+    document.getElementById('modalContent').classList.add('show');
+  }, 10);
+}
+
+function closeModal() {
+  document.getElementById('modalContent').classList.remove('show');
+  setTimeout(function() {
+    document.getElementById('modalMask').classList.remove('show');
+    editingIndex = -1;
+  }, 250);
+}
+
+// 日期显示区点击触发原生 input
+document.getElementById('dateDisplay').addEventListener('click', function() {
+  document.getElementById('dateInput').focus();
+  document.getElementById('dateInput').click();
+});
+
+document.getElementById('timeDisplay').addEventListener('click', function() {
+  document.getElementById('timeInput').focus();
+  document.getElementById('timeInput').click();
+});
+
+document.getElementById('dateInput').addEventListener('input', function(e) {
+  document.getElementById('dateDisplay').textContent = e.target.value;
+});
+
+document.getElementById('timeInput').addEventListener('input', function(e) {
+  document.getElementById('timeDisplay').textContent = e.target.value;
+});
+
+document.getElementById('confirmBtn').addEventListener('click', function() {
+  if (editingIndex < 0) return;
+  var newDate = document.getElementById('dateInput').value || document.getElementById('dateDisplay').textContent;
+  var newTime = document.getElementById('timeInput').value || document.getElementById('timeDisplay').textContent;
+  progressList[editingIndex].date = newDate + ' ' + newTime;
+  renderTimeline();
+  closeModal();
+});
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalMask').addEventListener('click', closeModal);
+
+// === 照片更换功能 ===
+var photoInput = document.getElementById('photoInput');
+var attachmentThumb = document.getElementById('attachmentThumb');
+var attachmentName = document.getElementById('attachmentName');
+var changePhotoBtn = document.getElementById('changePhotoBtn');
+
+// 点击缩略图或"更换照片"按钮 → 触发文件选择
+function triggerPhotoPicker() {
+  // 在 iOS Safari 上，click() 会弹出"拍照/从相册选择/浏览"选项
+  photoInput.value = '';
+  photoInput.click();
+}
+
+attachmentThumb.addEventListener('click', triggerPhotoPicker);
+changePhotoBtn.addEventListener('click', triggerPhotoPicker);
+
+// 选择照片后 → 预览 + 更新文件名
+photoInput.addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+
+  // 用 FileReader 读取为 base64，直接显示
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    attachmentThumb.src = ev.target.result;
+    // 更新文件名为新文件名
+    attachmentName.textContent = file.name || 'photo_' + Date.now() + '.png';
+  };
+  reader.readAsDataURL(file);
+});
+
+// === 编辑/预览模式切换 ===
+// 默认预览模式（方便截图，画面完全干净）
+// 切换方式：双击屏幕任意位置
+var editToggleBtn = document.getElementById('editToggle');
+var modeToast = document.getElementById('modeToast');
+var hideBtnTimer = null;
+var hideToastTimer = null;
+
+function showToast(text) {
+  modeToast.textContent = text;
+  modeToast.classList.add('show');
+  clearTimeout(hideToastTimer);
+  hideToastTimer = setTimeout(function() {
+    modeToast.classList.remove('show');
+  }, 1200);
+}
+
+function applyMode(isEdit) {
+  if (isEdit) {
+    document.body.classList.remove('preview-mode');
+    editToggleBtn.textContent = '✎';
+    editToggleBtn.style.backgroundColor = '#2b8bf2';
+    // 编辑模式下：按钮显示 3 秒后自动淡出（避免截图时挡画面）
+    editToggleBtn.style.opacity = '1';
+    clearTimeout(hideBtnTimer);
+    hideBtnTimer = setTimeout(function() {
+      editToggleBtn.style.opacity = '0';
+    }, 3000);
+    showToast('编辑模式 · 双击切换');
+  } else {
+    document.body.classList.add('preview-mode');
+    showToast('预览模式 · 双击切换');
+  }
+}
+
+// 读取上次状态（默认预览模式）
+var savedMode = localStorage.getItem('leaveEditMode');
+var isEditMode = savedMode === 'edit';
+applyMode(isEditMode);
+
+// 双击屏幕切换模式
+var lastTap = 0;
+document.addEventListener('click', function(e) {
+  var now = Date.now();
+  if (now - lastTap < 350) {
+    // 双击触发
+    isEditMode = !isEditMode;
+    applyMode(isEditMode);
+    localStorage.setItem('leaveEditMode', isEditMode ? 'edit' : 'preview');
+    lastTap = 0;
+  } else {
+    lastTap = now;
+  }
+});
+
+// 编辑模式下：触摸切换按钮区域时重新显示按钮 3 秒
+editToggleBtn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  if (!isEditMode) return;
+  editToggleBtn.style.opacity = '1';
+  clearTimeout(hideBtnTimer);
+  hideBtnTimer = setTimeout(function() {
+    editToggleBtn.style.opacity = '0';
+  }, 3000);
+});
+
+// 初始渲染
+renderTimeline();
+</script>
+</body>
+</html>
