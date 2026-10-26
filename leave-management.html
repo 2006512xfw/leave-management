@@ -54,12 +54,8 @@ html, body {
 
 .top-right {
   justify-content: flex-end;
-}
-
-.icon-close {
-  font-size: 30px;
-  color: #333;
-  line-height: 1;
+  align-items: center;
+  gap: 8px;
 }
 
 .icon-more {
@@ -94,13 +90,15 @@ html, body {
   align-items: center;
   padding: 12px 16px;
   background-color: #f5f7fa;
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
   overflow-x: auto;
   white-space: nowrap;
 }
 
 .crumb-item {
+  display: inline-flex;
+  align-items: center;
   margin: 0 2px;
   flex-shrink: 0;
 }
@@ -113,9 +111,17 @@ html, body {
   color: #333;
 }
 
+.crumb-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  fill: #2b8bf2;
+}
+
 .crumb-sep {
-  margin: 0 4px;
-  color: #999;
+  margin: 0 6px;
+  color: #bbb;
+  font-size: 13px;
 }
 
 /* 信息卡片 */
@@ -763,12 +769,18 @@ body.preview-mode .timeline-user.editable {
     </div>
     <div class="top-right">
       <button class="edit-mode-btn" id="editModeBtn">编辑</button>
+      <span class="icon-more">•••</span>
     </div>
   </div>
 
   <!-- 面包屑 -->
   <div class="breadcrumb">
-    <span class="crumb-item home">首页</span>
+    <span class="crumb-item home">
+      <svg class="crumb-icon" viewBox="0 0 24 24">
+        <path d="M12 2L2 9v2h2v9h6v-6h4v6h6v-9h2V9L12 2z"/>
+      </svg>
+      首页
+    </span>
     <span class="crumb-sep">&gt;</span>
     <span class="crumb-item link">请假管理</span>
     <span class="crumb-sep">&gt;</span>
