@@ -132,6 +132,25 @@ html, body {
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   position: relative;
+  overflow: hidden;
+}
+
+/* 已通过印章 */
+.stamp-pass {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%) rotate(-15deg);
+  width: 90px;
+  height: 90px;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.stamp-pass svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* 卡片内标题 */
@@ -804,6 +823,19 @@ body.preview-mode .timeline-user.editable {
 
   <!-- 请假信息 -->
   <div class="info-card">
+    <div class="stamp-pass">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- 外圈虚线圆 -->
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#5dd5c8" stroke-width="2" stroke-dasharray="6 4"/>
+        <!-- 内圈实线圆 -->
+        <circle cx="60" cy="60" r="42" fill="none" stroke="#5dd5c8" stroke-width="1.5"/>
+        <!-- 中间横条 -->
+        <rect x="18" y="46" width="84" height="28" rx="4" fill="none" stroke="#5dd5c8" stroke-width="2"/>
+        <!-- 已通过文字 -->
+        <text x="60" y="67" text-anchor="middle" font-size="22" font-weight="bold" fill="#5dd5c8" style="font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;">已通过</text>
+      </svg>
+    </div>
+
     <div class="section-title">
       <div class="title-bar"></div>
       <span>请假信息</span>
