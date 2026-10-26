@@ -1097,7 +1097,7 @@ photoInput.addEventListener('change', function(e) {
 });
 
 // === 编辑/预览模式切换 ===
-// 顶部「编辑/完成」按钮显式切换，避免双击与字段点击冲突
+// 双击屏幕任意位置切换模式，用 dblclick 事件避免与字段点击冲突
 var editModeBtn = document.getElementById('editModeBtn');
 var modeToast = document.getElementById('modeToast');
 var hideToastTimer = null;
@@ -1115,11 +1115,11 @@ function applyMode(isEdit) {
   if (isEdit) {
     document.body.classList.remove('preview-mode');
     editModeBtn.textContent = '完成';
-    showToast('编辑模式 · 可点击修改');
+    showToast('编辑模式 · 双击退出');
   } else {
     document.body.classList.add('preview-mode');
     editModeBtn.textContent = '编辑';
-    showToast('预览模式');
+    showToast('预览模式 · 双击编辑');
   }
 }
 
@@ -1128,6 +1128,13 @@ var isEditMode = false;
 document.body.classList.add('preview-mode');
 editModeBtn.textContent = '编辑';
 
+// 双击屏幕切换模式（dblclick 不会和字段单击冲突）
+document.addEventListener('dblclick', function(e) {
+  isEditMode = !isEditMode;
+  applyMode(isEditMode);
+});
+
+// 顶部按钮也可单独点击切换
 editModeBtn.addEventListener('click', function(e) {
   e.stopPropagation();
   isEditMode = !isEditMode;
