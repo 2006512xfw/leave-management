@@ -154,6 +154,23 @@ html, body {
   color: #2b8bf2;
 }
 
+/* 顶部编辑按钮 */
+.edit-mode-btn {
+  font-size: 14px;
+  color: #2b8bf2;
+  padding: 6px 12px;
+  border: 1px solid #2b8bf2;
+  border-radius: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+body:not(.preview-mode) .edit-mode-btn {
+  background-color: #2b8bf2;
+  color: #fff;
+}
+
 /* 可编辑信息值 */
 .info-value.editable {
   color: #2b8bf2;
@@ -651,7 +668,7 @@ body.preview-mode .attachment-thumb {
       <span class="sub-title">xsgl.gxjmxy.edu.cn</span>
     </div>
     <div class="top-right">
-      <span class="icon-more">•••</span>
+      <button class="edit-mode-btn" id="editModeBtn">编辑</button>
     </div>
   </div>
 
@@ -1080,11 +1097,9 @@ photoInput.addEventListener('change', function(e) {
 });
 
 // === 编辑/预览模式切换 ===
-// 默认预览模式（方便截图，画面完全干净）
-// 切换方式：双击屏幕任意位置
-var editToggleBtn = document.getElementById('editToggle');
+// 顶部「编辑/完成」按钮显式切换，避免双击与字段点击冲突
+var editModeBtn = document.getElementById('editModeBtn');
 var modeToast = document.getElementById('modeToast');
-var hideBtnTimer = null;
 var hideToastTimer = null;
 
 function showToast(text) {
@@ -1099,50 +1114,24 @@ function showToast(text) {
 function applyMode(isEdit) {
   if (isEdit) {
     document.body.classList.remove('preview-mode');
-    editToggleBtn.textContent = '✎';
-    editToggleBtn.style.backgroundColor = '#2b8bf2';
-    // 编辑模式下：按钮显示 3 秒后自动淡出（避免截图时挡画面）
-    editToggleBtn.style.opacity = '1';
-    clearTimeout(hideBtnTimer);
-    hideBtnTimer = setTimeout(function() {
-      editToggleBtn.style.opacity = '0';
-    }, 3000);
-    showToast('编辑模式 · 双击切换');
+    editModeBtn.textContent = '完成';
+    showToast('编辑模式 · 可点击修改');
   } else {
     document.body.classList.add('preview-mode');
-    showToast('预览模式 · 双击切换');
+    editModeBtn.textContent = '编辑';
+    showToast('预览模式');
   }
 }
 
-// 读取上次状态（默认预览模式）
-var savedMode = localStorage.getItem('leaveEditMode');
-var isEditMode = savedMode === 'edit';
-applyMode(isEditMode);
+// 默认预览模式（方便截图）
+var isEditMode = false;
+document.body.classList.add('preview-mode');
+editModeBtn.textContent = '编辑';
 
-// 双击屏幕切换模式
-var lastTap = 0;
-document.addEventListener('click', function(e) {
-  var now = Date.now();
-  if (now - lastTap < 350) {
-    // 双击触发
-    isEditMode = !isEditMode;
-    applyMode(isEditMode);
-    localStorage.setItem('leaveEditMode', isEditMode ? 'edit' : 'preview');
-    lastTap = 0;
-  } else {
-    lastTap = now;
-  }
-});
-
-// 编辑模式下：触摸切换按钮区域时重新显示按钮 3 秒
-editToggleBtn.addEventListener('click', function(e) {
+editModeBtn.addEventListener('click', function(e) {
   e.stopPropagation();
-  if (!isEditMode) return;
-  editToggleBtn.style.opacity = '1';
-  clearTimeout(hideBtnTimer);
-  hideBtnTimer = setTimeout(function() {
-    editToggleBtn.style.opacity = '0';
-  }, 3000);
+  isEditMode = !isEditMode;
+  applyMode(isEditMode);
 });
 
 // 初始渲染
