@@ -559,6 +559,16 @@ body.preview-mode .avatar {
   margin-bottom: 6px;
 }
 
+.timeline-user.editable {
+  color: #2b8bf2;
+  cursor: pointer;
+}
+
+body.preview-mode .timeline-user.editable {
+  color: #999;
+  cursor: default;
+}
+
 .timeline-remark {
   font-size: 13px;
   color: #2b8bf2;
@@ -940,7 +950,8 @@ var progressList = [
     user: '许法文',
     completed: true,
     active: false,
-    editable: true
+    editable: true,
+    userEditable: true
   },
   {
     title: '辅导员审核',
@@ -951,7 +962,8 @@ var progressList = [
     remark: '同意请假',
     completed: true,
     active: false,
-    editable: true
+    editable: true,
+    userEditable: true
   },
   {
     title: '结束',
@@ -991,7 +1003,17 @@ function renderTimeline() {
       ? '<span class="timeline-status ' + item.statusColor + '">' + item.status + '</span>'
       : '';
 
-    var userHtml = item.user ? '<div class="timeline-user">' + item.user + '</div>' : '';
+    var userHtml = '';
+    if (item.user) {
+      if (item.userEditable) {
+        userHtml = '<div class="timeline-user editable" data-user-index="' + index + '">' +
+          '<span>' + item.user + '</span>' +
+          '<span class="edit-hint">修改</span>' +
+        '</div>';
+      } else {
+        userHtml = '<div class="timeline-user">' + item.user + '</div>';
+      }
+    }
     var remarkHtml = item.remark ? '<div class="timeline-remark">' + item.remark + '</div>' : '';
 
     var lineHtml = (index !== progressList.length - 1) ? '<div class="timeline-line"></div>' : '';
@@ -1024,6 +1046,27 @@ function renderTimeline() {
     el.addEventListener('click', function() {
       var idx = parseInt(this.getAttribute('data-index'));
       openModal(idx);
+    });
+  });
+
+  // 绑定可编辑用户名（申请人/辅导员）点击事件
+  var editableUsers = document.querySelectorAll('.timeline-user.editable');
+  editableUsers.forEach(function(el) {
+    el.addEventListener('click', function() {
+      var idx = parseInt(this.getAttribute('data-user-index'));
+      var item = progressList[idx];
+      // 复用文本编辑弹窗修改姓名
+      editingField = 'timelineUser-' + idx;
+      document.getElementById('textModalTitle').textContent = '修改姓名';
+      document.getElementById('textFieldLabel').textContent = '姓名';
+      textInput.type = 'text';
+      textInput.value = item.user;
+      textModalMask.classList.add('show');
+      setTimeout(function() {
+        textModalContent.classList.add('show');
+        textInput.focus();
+        textInput.select();
+      }, 10);
     });
   });
 }
@@ -1157,12 +1200,19 @@ textConfirmBtn.addEventListener('click', function() {
   if (!editingField) return;
   var newVal = textInput.value.trim();
   if (newVal) {
-    var el = document.getElementById(editingField);
-    var label = el.previousElementSibling ? el.previousElementSibling.textContent.replace(/[：:]/g, '') : '';
-    if (isDatetimeField(label)) {
-      el.textContent = fromDatetimeLocal(newVal);
+    // 处理办理进度里的姓名编辑
+    if (editingField.indexOf('timelineUser-') === 0) {
+      var tIdx = parseInt(editingField.split('-')[1]);
+      progressList[tIdx].user = newVal;
+      renderTimeline();
     } else {
-      el.textContent = newVal;
+      var el = document.getElementById(editingField);
+      var label = el.previousElementSibling ? el.previousElementSibling.textContent.replace(/[：:]/g, '') : '';
+      if (isDatetimeField(label)) {
+        el.textContent = fromDatetimeLocal(newVal);
+      } else {
+        el.textContent = newVal;
+      }
     }
   }
   textInput.type = 'text';
