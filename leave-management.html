@@ -164,11 +164,26 @@ html, body {
   background-color: #fff;
   cursor: pointer;
   white-space: nowrap;
+  transition: opacity 0.3s;
 }
 
 body:not(.preview-mode) .edit-mode-btn {
   background-color: #2b8bf2;
   color: #fff;
+}
+
+/* 预览模式：按钮完全隐藏 */
+body.preview-mode .edit-mode-btn {
+  display: none !important;
+}
+
+/* 编辑模式：按钮默认透明，触摸屏幕时短暂显示 */
+body:not(.preview-mode) .edit-mode-btn {
+  opacity: 0;
+}
+
+body:not(.preview-mode) .edit-mode-btn.show {
+  opacity: 1;
 }
 
 /* 可编辑信息值 */
@@ -1098,9 +1113,11 @@ photoInput.addEventListener('change', function(e) {
 
 // === 编辑/预览模式切换 ===
 // 双击屏幕任意位置切换模式，用 dblclick 事件避免与字段点击冲突
+// 编辑模式下：按钮 3 秒后自动淡出，触摸屏幕时短暂回来
 var editModeBtn = document.getElementById('editModeBtn');
 var modeToast = document.getElementById('modeToast');
 var hideToastTimer = null;
+var hideBtnTimer = null;
 
 function showToast(text) {
   modeToast.textContent = text;
@@ -1111,11 +1128,21 @@ function showToast(text) {
   }, 1200);
 }
 
+// 控制编辑按钮显示/淡出
+function showEditBtn() {
+  editModeBtn.classList.add('show');
+  clearTimeout(hideBtnTimer);
+  hideBtnTimer = setTimeout(function() {
+    editModeBtn.classList.remove('show');
+  }, 3000);
+}
+
 function applyMode(isEdit) {
   if (isEdit) {
     document.body.classList.remove('preview-mode');
     editModeBtn.textContent = '完成';
     showToast('编辑模式 · 双击退出');
+    showEditBtn();
   } else {
     document.body.classList.add('preview-mode');
     editModeBtn.textContent = '编辑';
@@ -1128,10 +1155,18 @@ var isEditMode = false;
 document.body.classList.add('preview-mode');
 editModeBtn.textContent = '编辑';
 
-// 双击屏幕切换模式（dblclick 不会和字段单击冲突）
+// 双击屏幕切换模式
 document.addEventListener('dblclick', function(e) {
   isEditMode = !isEditMode;
   applyMode(isEditMode);
+});
+
+// 编辑模式下：触摸屏幕任意位置 → 按钮短暂回来
+document.addEventListener('touchstart', function() {
+  if (isEditMode) showEditBtn();
+}, { passive: true });
+document.addEventListener('click', function() {
+  if (isEditMode) showEditBtn();
 });
 
 // 顶部按钮也可单独点击切换
