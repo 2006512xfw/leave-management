@@ -154,6 +154,37 @@ html, body {
   color: #2b8bf2;
 }
 
+/* 可编辑信息值 */
+.info-value.editable {
+  color: #2b8bf2;
+  cursor: pointer;
+}
+
+.editable-wrap {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.edit-badge {
+  font-size: 11px;
+  color: #2b8bf2;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid #2b8bf2;
+  border-radius: 4px;
+}
+
+body.preview-mode .info-value.editable,
+body.preview-mode .edit-badge {
+  color: #333;
+  cursor: default;
+}
+
+body.preview-mode .edit-badge {
+  display: none !important;
+}
+
 .attachment-section {
   margin-top: 6px;
 }
@@ -637,23 +668,23 @@ body.preview-mode .attachment-thumb {
   <div class="info-card">
     <div class="info-row">
       <span class="info-label">结束时间：</span>
-      <span class="info-value">2025-12-05 13:42:00</span>
+      <span class="info-value editable" id="endTime" data-edit="1">2025-12-05 13:42:00</span>
     </div>
     <div class="info-row">
       <span class="info-label">统计时长：</span>
-      <span class="info-value">1天0小时0分钟</span>
+      <span class="info-value editable" id="duration" data-edit="1">1天0小时0分钟</span>
     </div>
     <div class="info-row">
       <span class="info-label">紧急联系人：</span>
-      <span class="info-value">许宗彬</span>
+      <span class="info-value editable" id="contactName" data-edit="1">许宗彬</span>
     </div>
     <div class="info-row">
       <span class="info-label">紧急联系人电话：</span>
-      <span class="info-value">18376922627</span>
+      <span class="info-value editable" id="contactPhone" data-edit="1">18376922627</span>
     </div>
     <div class="info-row">
       <span class="info-label">请假理由：</span>
-      <span class="info-value">发烧39.3出去打针</span>
+      <span class="info-value editable" id="reason" data-edit="1">发烧39.3出去打针</span>
     </div>
     <div class="info-row">
       <span class="info-label">请假状态：</span>
@@ -712,7 +743,7 @@ body.preview-mode .attachment-thumb {
 <!-- 模式切换提示 -->
 <div class="mode-toast" id="modeToast">预览模式</div>
 
-<!-- 弹窗 -->
+<!-- 弹窗1：日期时间选择 -->
 <div class="modal-mask" id="modalMask"></div>
 <div class="modal-content" id="modalContent">
   <div class="modal-header">
@@ -733,6 +764,24 @@ body.preview-mode .attachment-thumb {
   </div>
   <div class="modal-footer">
     <button class="btn-confirm" id="confirmBtn">确定</button>
+  </div>
+</div>
+
+<!-- 弹窗2：信息文本编辑 -->
+<div class="modal-mask" id="textModalMask"></div>
+<div class="modal-content" id="textModalContent">
+  <div class="modal-header">
+    <span class="modal-title" id="textModalTitle">修改</span>
+    <span class="modal-close" id="textModalClose">×</span>
+  </div>
+  <div class="modal-body">
+    <div class="picker-row" id="textFieldRow">
+      <span class="picker-label" id="textFieldLabel">内容</span>
+      <input type="text" id="textInput" style="flex:1;font-size:15px;color:#2b8bf2;padding:6px 12px;background:#f5f7fa;border-radius:6px;border:1px solid #e0e0e0;min-width:160px;">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-confirm" id="textConfirmBtn">确定</button>
   </div>
 </div>
 
@@ -890,6 +939,114 @@ document.getElementById('confirmBtn').addEventListener('click', function() {
 
 document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalMask').addEventListener('click', closeModal);
+
+// === 信息卡片编辑功能 ===
+// 结束时间用 datetime-local（日期+时间一体），其余用文本输入
+var editingField = null;
+var textModalMask = document.getElementById('textModalMask');
+var textModalContent = document.getElementById('textModalContent');
+var textInput = document.getElementById('textInput');
+var textConfirmBtn = document.getElementById('textConfirmBtn');
+
+function openTextModal(fieldId, label, value) {
+  editingField = fieldId;
+  document.getElementById('textModalTitle').textContent = '修改' + label;
+  document.getElementById('textFieldLabel').textContent = label;
+  textInput.value = value;
+  textModalMask.classList.add('show');
+  setTimeout(function() {
+    textModalContent.classList.add('show');
+    textInput.focus();
+    textInput.select();
+  }, 10);
+}
+
+function closeTextModal() {
+  textModalContent.classList.remove('show');
+  setTimeout(function() {
+    textModalMask.classList.remove('show');
+    editingField = null;
+  }, 250);
+}
+
+// 结束时间：把 "2025-12-05 13:42:00" 转成 datetime-local 格式 "2025-12-05T13:42"
+function toDatetimeLocal(str) {
+  if (!str) return '';
+  var parts = str.split(' ');
+  if (parts.length < 2) return str;
+  var time = parts[1].substring(0, 5);
+  return parts[0] + 'T' + time;
+}
+function fromDatetimeLocal(str) {
+  if (!str) return '';
+  var d = str.replace('T', ' ');
+  return d + ':00';
+}
+
+// 结束时间点击 → 复用日期时间弹窗（更直观，用原生 datetime）
+var endTimeEl = document.getElementById('endTime');
+// 用一个单独的 datetime 弹窗处理结束时间
+function openEndDatetimeModal() {
+  editingField = 'endTime';
+  var cur = endTimeEl.textContent.trim();
+  document.getElementById('textModalTitle').textContent = '修改结束时间';
+  document.getElementById('textFieldLabel').textContent = '结束时间';
+  // 把 input 改成 datetime-local 类型
+  textInput.type = 'datetime-local';
+  textInput.value = toDatetimeLocal(cur);
+  textModalMask.classList.add('show');
+  setTimeout(function() {
+    textModalContent.classList.add('show');
+    textInput.focus();
+  }, 10);
+}
+
+function openTextFieldModal(fieldId) {
+  editingField = fieldId;
+  var el = document.getElementById(fieldId);
+  var label = el.previousElementSibling ? el.previousElementSibling.textContent.replace('：','') : '内容';
+  document.getElementById('textModalTitle').textContent = '修改' + label;
+  document.getElementById('textFieldLabel').textContent = label;
+  textInput.type = 'text';
+  textInput.value = el.textContent.trim();
+  textModalMask.classList.add('show');
+  setTimeout(function() {
+    textModalContent.classList.add('show');
+    textInput.focus();
+    textInput.select();
+  }, 10);
+}
+
+endTimeEl.addEventListener('click', openEndDatetimeModal);
+document.getElementById('duration').addEventListener('click', function() { openTextFieldModal('duration'); });
+document.getElementById('contactName').addEventListener('click', function() { openTextFieldModal('contactName'); });
+document.getElementById('contactPhone').addEventListener('click', function() { openTextFieldModal('contactPhone'); });
+document.getElementById('reason').addEventListener('click', function() { openTextFieldModal('reason'); });
+
+textConfirmBtn.addEventListener('click', function() {
+  if (!editingField) return;
+  var newVal = textInput.value.trim();
+  if (newVal) {
+    var el = document.getElementById(editingField);
+    if (editingField === 'endTime') {
+      el.textContent = fromDatetimeLocal(newVal);
+    } else {
+      el.textContent = newVal;
+    }
+  }
+  // 重置 input 类型
+  textInput.type = 'text';
+  closeTextModal();
+});
+
+document.getElementById('textModalClose').addEventListener('click', function() {
+  textInput.type = 'text';
+  closeTextModal();
+});
+textModalMask.addEventListener('click', function() {
+  textInput.type = 'text';
+  closeTextModal();
+});
 
 // === 照片更换功能 ===
 var photoInput = document.getElementById('photoInput');
